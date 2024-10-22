@@ -32,12 +32,15 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
+      - name: Tag Docker image
+        run: docker tag hello-world-spring-boot <your-dockerhub-username>/hello-world-spring-boot:latest
+
       - name: Push Docker image to Docker Hub
-        run: docker push hello-world-spring-boot
+        run: docker push <your-dockerhub-username>/hello-world-spring-boot:latest
 
       - name: Set up Kubeconfig
         run: echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
 
       - name: Deploy to Kubernetes
         run: |
-          helm upgrade --install hello-world ./hello-world-spring-boot --set image.repository=hello-world-spring-boot --set image.tag=latest
+          helm upgrade --install hello-world ./hello-world-spring-boot --set image.repository=samundra77/hello-world-spring-boot --set image.tag=latest
